@@ -67,8 +67,7 @@ with st.container():
 
 # -------------------- Search Records --------------------
 if email_input and phone_input:
-    RECORDS_API_URL = "http://localhost:8000/search"
-
+    RECORDS_API_URL = "https://sf-api-3.onrender.com/search"
     def search_records_from_api(email: str, phone: str):
         try:
             response = requests.post(RECORDS_API_URL, json={"email": email, "phone": phone})
@@ -124,7 +123,7 @@ if email_input and phone_input:
 # -------------------- Search Orders (via API) --------------------
 if 'email' in st.session_state and 'phone' in st.session_state:
     email_input = st.session_state.email
-    ORDER_API_URL = "http://localhost:8000/search_order"
+    ORDER_API_URL = "https://sf-api-3.onrender.com/search_order"
 
     def search_orders_from_api(email: str):
         try:
