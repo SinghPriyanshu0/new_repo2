@@ -53,3 +53,40 @@ def search_records(payload: SearchRequest):
         raise HTTPException(status_code=400, detail=f"Snowflake error: {str(e)}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+
+
+@app.get("/search_order")
+async def search_order(email: str):
+    """
+    API to search records by email in Order1, Order2, and Order3 tables.
+    """
+    results = {}
+    
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        schema_name = 'SC'  # Specify your schema name here
+        tables = ['Order1', 'Order2', 'Order3']
+
+        for table in tables:
+            query = f"""
+                SELECT * FROM {schema_name}.{table}
+                WHERE Email = %s
+            """
+            cur.execute(query, (email,))
+            rows = cur.fetchall()
+            if rows:
+                colnames = [desc[0] for desc in cur.description]
+                results[table] = pd.DataFrame(rows, columns=colnames).to_dict(orient="records")
+        cur.close()
+        conn.close()
+    except ProgrammingError as e:
+        raise HTTPException(status_code=400, detail=f"Programming error: {e}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to search: {e}")
+    
+    if not results:
+        raise HTTPException(status_code=404, detail="No matching records found in Order1, Order2, or Order3.")
+    
+    return results

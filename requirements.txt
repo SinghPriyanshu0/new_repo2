@@ -3,6 +3,10 @@ uvicorn
 pydantic
 pandas
 snowflake-connector-python
+<<<<<<< HEAD
 mangum
 python-dotenv
 pydantic[email]
+=======
+python-dotenv
+>>>>>>> 390c7c1 (second api commit)
